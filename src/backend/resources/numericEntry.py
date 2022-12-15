@@ -1,63 +1,20 @@
 import datetime
-from flask_restful import Resource, request
+from flask_restful import request
 from backend.models import NumericEntry
-from backend.models.database import db
 from backend.schema import NumericEntrySchema
-from backend.utils.query import query_wrapper
-from backend.utils.query import extract_payload
+from .api_resource import ApiResource
 
 
-class NumericEntryResource(Resource):
+class NumericEntryResource(ApiResource):
+    MODEL = NumericEntry
+    SCHEMA = NumericEntrySchema()
+    SCHEMA_MANY = NumericEntrySchema(many=True)
 
-    def get(self):
-        form_data = dict(request.args)
-        if form_data.get('id'):
-            item = NumericEntry.query.get(form_data.get('id'))
-            if item:
-                return NumericEntrySchema().dump(item), 200
-            return "NumericEntry with id=%s not found" % form_data.get('id'), 404
-
-        result, err = _query_all()
-        if not err is None:
-            return err, 404
-
-        return result, 200
-
-    def post(self):
-        payload, err = _extract_payload(request)
-        if not err is None:
-            return err, 400
-
-        new_entry = NumericEntry(**payload)
-        db.session.add(new_entry)
-        db.session.commit()
-
-        new_entry_in_db = NumericEntry.query.get(new_entry.id)
-        schema = NumericEntrySchema()
-        return schema.dump(new_entry_in_db), 201
-
-    def delete(self):
-        form_data = dict(request.json)
-        if form_data.get('id'):
-            item = NumericEntry.query.get(form_data.get('id'))
-            if item:
-                db.session.delete(item)
-                db.session.commit()
-                return NumericEntrySchema().dump(item), 200
-            return "Resource with id=%s not found" % form_data.get('id'), 404
-        return "Resource id must be given", 400
-
-@query_wrapper
-def _query_all():
-    items = NumericEntry.query.all()
-    return NumericEntrySchema(many=True).dump(items)
-
-
-def _extract_payload(request):
-    try:
-        payload = extract_payload(request)
-        payload['date'] = datetime.datetime.strptime(
-            payload['date'], "%Y-%m-%d")
-        return payload, None
-    except Exception as e:
-        return None, f'Failed to extract payload: {e}'
+    def extract_payload(self):
+        try:
+            payload = request.json
+            payload['date'] = datetime.datetime.strptime(
+                payload['date'], "%Y-%m-%d")
+            return payload, None
+        except Exception as e:
+            return None, f'Failed to extract payload: {e}'

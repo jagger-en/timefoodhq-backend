@@ -33,7 +33,7 @@ class TestEndpoints(BaseClass):
             '/api/v1/numericentry?id=%s' % 'foo-bar')
         self.assertEqual(response.status_code, 404)
         self.assertEqual(
-            response.json, "NumericEntry with id=foo-bar not found")
+            response.json, "Resource with id=foo-bar not found")
 
     def test_deleting_numericentry(self):
         response = self.endpoint_client.post('/api/v1/numericentry', json={

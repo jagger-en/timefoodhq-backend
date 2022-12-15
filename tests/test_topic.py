@@ -36,7 +36,7 @@ class TestEndpoints(BaseClass):
     def test_404(self):
         response = self.endpoint_client.get('/api/v1/topic?id=%s' % 'foo-bar')
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json, "Topic with id=foo-bar not found")
+        self.assertEqual(response.json, "Resource with id=foo-bar not found")
 
     def test_unique_constraint_for_name(self):
         response = self.endpoint_client.post(

@@ -1,4 +1,3 @@
-import json
 from functools import wraps
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.exc import IntegrityError
@@ -26,10 +25,3 @@ def query_wrapper(func):
         except Exception as e:
             return None, f'Unknown Error: {e}'
     return _query_wrapper
-
-
-def extract_payload(request):
-    payload = request.json
-    if not isinstance(payload, dict):
-        payload = json.loads(payload)
-    return payload
