@@ -54,7 +54,7 @@ class ApiResource(Resource):
 
     @query_wrapper
     def _query_all(self):
-        items = self.MODEL.query.order_by(self.MODEL.last_updated).all()
+        items = self.MODEL.query.order_by(self.MODEL.last_updated.desc()).all()
         return self.SCHEMA_MANY.dump(items)
 
     @commit_wrapper

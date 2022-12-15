@@ -20,7 +20,7 @@ class ApiResourceTesterMixin():
         dates = [item['last_updated'] for item in response.json]
 
         copied = deepcopy(dates)
-        copied.sort()
+        copied.sort(reverse=True)
 
         self.assertEqual(copied, dates)
 
