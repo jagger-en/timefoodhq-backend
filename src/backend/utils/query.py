@@ -20,11 +20,11 @@ def query_wrapper(func):
     @wraps(func)
     def _query_wrapper(*args, **kwargs):
         try:
-            return func(*args, **kwargs)
+            return func(*args, **kwargs), None
         except OperationalError as e:
-            return [], f'Operational Error: {e.orig}'
+            return None, f'Operational Error: {e.orig}'
         except Exception as e:
-            return [], f'Unknown Error: {e}'
+            return None, f'Unknown Error: {e}'
     return _query_wrapper
 
 

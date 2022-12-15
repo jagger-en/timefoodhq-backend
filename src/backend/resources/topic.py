@@ -9,7 +9,10 @@ from backend.utils.query import extract_payload
 class TopicResource(Resource):
 
     def get(self):
-        result = _query_all()
+        result, err = _query_all()
+        if not err is None:
+            return err, 404
+
         return result, 200
 
     def post(self):
