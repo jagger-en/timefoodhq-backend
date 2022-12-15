@@ -42,7 +42,7 @@ class ApiResource(Resource):
         return self.SCHEMA.dump(new_record_from_db), 201
 
     def delete(self):
-        form_data = dict(request.json)
+        form_data = dict(request.args)
         if form_data.get('id'):
             item = self.MODEL.query.get(form_data.get('id'))
             if item:

@@ -96,5 +96,4 @@ class ApiResourceTesterMixin():
         return self.endpoint_client.post(self.RESOURCE_PATH, json=self.TEST_DATA)
 
     def delete_resource_by_id(self, record_id):
-        payload = {'id': record_id}
-        return self.endpoint_client.delete(self.RESOURCE_PATH, json=payload)
+        return self.endpoint_client.delete("%s?id=%s" % (self.RESOURCE_PATH, record_id))
