@@ -9,3 +9,4 @@ class TopicSchema(ma.Schema):
     contextTitle = ma.Str()
     supportedUnit = ma.Str()
     combinationOperation = ma.Str()
+    last_updated = ma.DateTime()

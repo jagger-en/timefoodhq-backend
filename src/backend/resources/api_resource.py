@@ -1,3 +1,4 @@
+import datetime
 from flask_restful import Resource, request
 from backend.models.database import db
 from backend.utils.query import query_wrapper
@@ -51,12 +52,14 @@ class ApiResource(Resource):
 
     @query_wrapper
     def _query_all(self):
-        items = self.MODEL.query.all()
+        items = self.MODEL.query.order_by(self.MODEL.last_updated).all()
         return self.SCHEMA_MANY.dump(items)
 
     @commit_wrapper
     def _add_new(self, payload):
         from backend.models.database import db
+
+        payload['last_updated'] = datetime.datetime.now()
         new_record = self.MODEL(**payload)
         db.session.add(new_record)
         db.session.commit()

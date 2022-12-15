@@ -10,3 +10,4 @@ class NumericEntry(db.Model):
     context = sa.Column(sa.String(150))
     value = sa.Column(sa.Float, nullable=False)
     date = sa.Column(sa.Date, nullable=False)
+    last_updated = sa.Column(sa.DateTime, nullable=False)

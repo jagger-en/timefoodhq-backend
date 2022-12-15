@@ -12,3 +12,4 @@ class NumericEntrySchema(ma.Schema):
     context = ma.Str()
     value = ma.Float()
     date = ma.Date()
+    last_updated = ma.DateTime()

@@ -12,4 +12,6 @@ class Topic(db.Model):
     supportedUnit = sa.Column(sa.String(150))
     combinationOperation = sa.Column(sa.String(150), nullable=False)
 
+    last_updated = sa.Column(sa.DateTime, nullable=False)
+
     numeric_entries = db.relationship('NumericEntry', backref='topic')

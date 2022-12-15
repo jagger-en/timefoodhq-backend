@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class MissingAttribute(Exception):
     pass
 
@@ -11,8 +14,16 @@ class ApiResourceTesterMixin():
     # HTTP: GET
     ###
 
-    def test_all_shown(self):
+    def test_all_shown_and_ordered(self):
         response = self.get_all()
+
+        dates = [item['last_updated'] for item in response.json]
+
+        copied = deepcopy(dates)
+        copied.sort()
+
+        self.assertEqual(copied, dates)
+
         self.assertEqual(len(response.json), self.TOTAL_INITIALIZED)
 
     def test_404(self):
