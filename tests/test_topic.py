@@ -26,11 +26,17 @@ class TestEndpoints(BaseClass):
             '/api/v1/topic', json=self.TEST_DATA)
         self.assertEqual(response.status_code, 201)
         self._check(response.json)
+        topic_id = response.json['id']
 
-        response = self.endpoint_client.get('/api/v1/topic')
+        response = self.endpoint_client.get('/api/v1/topic?id=%s' % topic_id)
         self.assertEqual(response.status_code, 200)
-        self._check(
-            [item for item in response.json if item['name'] == 'EXAMPLE NAME'][0])
+        self.assertEqual(response.json['id'], topic_id)
+        self._check(response.json)
+
+    def test_404(self):
+        response = self.endpoint_client.get('/api/v1/topic?id=%s' % 'foo-bar')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json, "Topic with id=foo-bar not found")
 
     def test_unique_constraint_for_name(self):
         response = self.endpoint_client.post(

@@ -20,6 +20,20 @@ class TestEndpoints(BaseClass):
         self.assertEqual(response.json['context'], 'Chocolate')
         self.assertEqual(response.json['value'], 400)
         self.assertEqual(response.json['topic']['name'], 'Food spending')
+        entry_id = response.json['id']
+
+        response = self.endpoint_client.get(
+            '/api/v1/numericentry?id=%s' % entry_id)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['id'], entry_id)
+        self.assertEqual(response.json['topic']['name'], 'Food spending')
+
+    def test_404(self):
+        response = self.endpoint_client.get(
+            '/api/v1/numericentry?id=%s' % 'foo-bar')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json, "NumericEntry with id=foo-bar not found")
 
 
 if __name__ == '__main__':

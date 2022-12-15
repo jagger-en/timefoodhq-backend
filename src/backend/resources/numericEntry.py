@@ -10,6 +10,13 @@ from backend.utils.query import extract_payload
 class NumericEntryResource(Resource):
 
     def get(self):
+        form_data = dict(request.args)
+        if form_data.get('id'):
+            item = NumericEntry.query.get(form_data.get('id'))
+            if item:
+                return NumericEntrySchema().dump(item), 200
+            return "NumericEntry with id=%s not found" % form_data.get('id'), 404
+
         result, err = _query_all()
         if not err is None:
             return err, 404

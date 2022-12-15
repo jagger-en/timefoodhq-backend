@@ -9,6 +9,13 @@ from backend.utils.query import extract_payload
 class TopicResource(Resource):
 
     def get(self):
+        form_data = dict(request.args)
+        if form_data.get('id'):
+            item = Topic.query.get(form_data.get('id'))
+            if item:
+                return TopicSchema().dump(item), 200
+            return "Topic with id=%s not found" % form_data.get('id'), 404
+
         result, err = _query_all()
         if not err is None:
             return err, 404
