@@ -14,4 +14,4 @@ class Topic(db.Model):
 
     last_updated = sa.Column(sa.DateTime, nullable=False)
 
-    numeric_entries = db.relationship('NumericEntry', backref='topic')
+    numeric_entries = db.relationship('NumericEntry', backref='topic', cascade="all,delete")
