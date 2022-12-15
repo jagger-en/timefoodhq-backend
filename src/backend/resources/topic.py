@@ -1,8 +1,8 @@
 from flask_restful import Resource, request
 from backend.models import Topic
-from backend.models.database import db
 from backend.schema import TopicSchema
 from backend.utils.query import query_wrapper
+from backend.utils.query import commit_wrapper
 from backend.utils.query import extract_payload
 
 
@@ -17,13 +17,22 @@ class TopicResource(Resource):
         if not err is None:
             return err, 400
 
-        new_topic = Topic(**payload)
-        db.session.add(new_topic)
-        db.session.commit()
+        new_topic, err = _add_new(payload)
+        if not err is None:
+            return err, 400
 
         new_topic_in_db = Topic.query.get(new_topic.id)
         schema = TopicSchema()
         return schema.dump(new_topic_in_db), 201
+
+
+@commit_wrapper
+def _add_new(payload):
+    from backend.models.database import db
+    new_topic = Topic(**payload)
+    db.session.add(new_topic)
+    db.session.commit()
+    return new_topic
 
 
 @query_wrapper
