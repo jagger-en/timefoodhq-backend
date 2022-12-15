@@ -1,4 +1,5 @@
 import datetime
+import json
 from flask_restful import Resource, request
 from backend.models.database import db
 from backend.utils.query import query_wrapper
@@ -28,7 +29,8 @@ class ApiResource(Resource):
         return result, 200
 
     def post(self):
-        payload, err = self.extract_payload()
+        payload = self.get_payload_as_dict()
+        payload, err = self.extract_payload(payload)
         if not err is None:
             return err, 400
 
@@ -65,6 +67,12 @@ class ApiResource(Resource):
         db.session.commit()
         return new_record
 
-    def extract_payload(self):
+    def extract_payload(self, payload):
         '''Overrideable method'''
-        return request.json, None
+        return payload, None
+
+    def get_payload_as_dict(self):
+        payload = request.json
+        if not isinstance(payload, dict):
+            payload = json.loads(payload)
+        return payload

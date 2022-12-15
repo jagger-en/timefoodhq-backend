@@ -10,9 +10,8 @@ class NumericEntryResource(ApiResource):
     SCHEMA = NumericEntrySchema()
     SCHEMA_MANY = NumericEntrySchema(many=True)
 
-    def extract_payload(self):
+    def extract_payload(self, payload):
         try:
-            payload = request.json
             payload['date'] = datetime.datetime.strptime(
                 payload['date'], "%Y-%m-%d")
             return payload, None
