@@ -36,6 +36,16 @@ class NumericEntryResource(Resource):
         schema = NumericEntrySchema()
         return schema.dump(new_entry_in_db), 201
 
+    def delete(self):
+        form_data = dict(request.json)
+        if form_data.get('id'):
+            item = NumericEntry.query.get(form_data.get('id'))
+            if item:
+                db.session.delete(item)
+                db.session.commit()
+                return NumericEntrySchema().dump(item), 200
+            return "Resource with id=%s not found" % form_data.get('id'), 404
+        return "Resource id must be given", 400
 
 @query_wrapper
 def _query_all():
