@@ -32,6 +32,12 @@ class TestEndpoints(ApiResourceTesterMixin, BaseClass):
     RESOURCE_PATH = '/api/v1/numericentry'
 
     def _check(self, response):
+        self.assertEqual(response['topic_id'], '2')
+        self.assertEqual(response['answer'], 'Chocolate')
+        self.assertEqual(response['value'], 400)
+        self.assertEqual(response['date'], '2022-12-05')
+
+    def _check_nested(self, response):
         self.assertEqual(response['topic']['id'], '2')
         self.assertEqual(response['answer'], 'Chocolate')
         self.assertEqual(response['value'], 400)
@@ -39,7 +45,7 @@ class TestEndpoints(ApiResourceTesterMixin, BaseClass):
 
     def _check_multiple_records(self, response):
         extracted = [{
-            'topic_id': item['topic']['id'],
+            'topic_id': item['topic_id'],
             'answer': item['answer'],
             'value': item['value'],
             'date': item['date'],

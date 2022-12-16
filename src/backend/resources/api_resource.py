@@ -20,14 +20,14 @@ class ApiResource(Resource):
         if form_data.get('id'):
             item = self.MODEL.query.get(form_data.get('id'))
             if item:
-                return self.SCHEMA.dump(item), 200
+                return self.dump_one(item)
             return self.NOT_FOUND % form_data.get('id'), 404
 
-        result, err = self._query_all()
+        items, err = self._query_all()
         if not err is None:
             return err, 404
 
-        return result, 200
+        return self.dump_many(items)
 
     def post(self):
         request_json = request.json
@@ -47,7 +47,7 @@ class ApiResource(Resource):
             return err, 400
 
         new_record_from_db = self.MODEL.query.get(new_record.id)
-        return self.SCHEMA.dump(new_record_from_db), 201
+        return self.dump_one(new_record_from_db, 201)
 
     def handle_multiple_entries(self, payload):
         '''
@@ -69,14 +69,13 @@ class ApiResource(Resource):
             if item:
                 db.session.delete(item)
                 db.session.commit()
-                return self.SCHEMA.dump(item), 200
+                return self.dump_one(item)
             return self.NOT_FOUND % form_data.get('id'), 404
         return "Resource id must be given", 400
 
     @query_wrapper
     def _query_all(self):
-        items = self.MODEL.query.order_by(self.MODEL.last_updated.desc()).all()
-        return self.SCHEMA_MANY.dump(items)
+        return self.MODEL.query.order_by(self.MODEL.last_updated.desc()).all()
 
     @commit_wrapper
     def _add_new(self, payload):
@@ -103,3 +102,15 @@ class ApiResource(Resource):
     def extract_payload(self, payload):
         '''Overrideable method'''
         return payload, None
+
+    def dump_one(self, item, code=200):
+        form_data = dict(request.args)
+        if form_data.get('nested') == "true":
+            return self.SCHEMA_NESTED.dump(item), code
+        return self.SCHEMA.dump(item), code
+
+    def dump_many(self, items, code=200):
+        form_data = dict(request.args)
+        if form_data.get('nested') == "true":
+            return self.SCHEMA_MANY_NESTED.dump(items), code
+        return self.SCHEMA_MANY.dump(items), code

@@ -1,14 +1,16 @@
 import datetime
-from flask_restful import request
 from backend.models import NumericEntry
 from backend.schema import NumericEntrySchema
+from backend.schema import NumericEntrySchemaNested
 from .api_resource import ApiResource
 
 
 class NumericEntryResource(ApiResource):
     MODEL = NumericEntry
     SCHEMA = NumericEntrySchema()
+    SCHEMA_NESTED = NumericEntrySchemaNested()
     SCHEMA_MANY = NumericEntrySchema(many=True)
+    SCHEMA_MANY_NESTED = NumericEntrySchemaNested(many=True)
 
     def extract_payload(self, payload):
         try:

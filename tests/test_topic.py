@@ -35,6 +35,9 @@ class TestEndpoints(ApiResourceTesterMixin, BaseClass):
         self.assertEqual(response['supportedUnit'], 'EXAMPLE SUPPORTED UNIT')
         self.assertEqual(response['combinationOperation'], 'avg')
 
+    def _check_nested(self, response):
+        self._check(response)
+
     def _check_multiple_records(self, response):
         extracted = [{
             'name': item['name'],

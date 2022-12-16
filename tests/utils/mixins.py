@@ -26,12 +26,24 @@ class ApiResourceTesterMixin():
 
         self.assertEqual(len(response.json), self.TOTAL_INITIALIZED)
 
+    def test_get_nested(self):
+        if self.TEST_DATA is None:
+            raise MissingAttribute('TEST_DATA')
+        if self.RESOURCE_PATH is None:
+            raise MissingAttribute('RESOURCE_PATH')
+
+        response = self.post_test_data()
+        record_id = response.json['id']
+
+        response = self.get_resource_by_id(record_id, nested=True)
+        self.assertEqual(response.status_code, 200)
+        self._check_nested(response.json)
+
     def test_404(self):
         if self.RESOURCE_PATH is None:
             raise MissingAttribute('RESOURCE_PATH')
 
-        response = self.endpoint_client.get(
-            '%s?id=%s' % (self.RESOURCE_PATH, 'foo-bar'))
+        response = self.get_resource_by_id('foo-bar')
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json, "Resource with id=foo-bar not found")
 
@@ -99,14 +111,20 @@ class ApiResourceTesterMixin():
     def get_all(self):
         return self.endpoint_client.get(self.RESOURCE_PATH)
 
-    def get_resource_by_id(self, record_id):
-        return self.endpoint_client.get('%s?id=%s' % (self.RESOURCE_PATH, record_id))
+    def get_resource_by_id(self, record_id, nested=False):
+        param_string = '%s?id=%s'
+        if nested:
+            param_string = '%s?id=%s&nested=true'
+        return self.endpoint_client.get(param_string % (self.RESOURCE_PATH, record_id))
 
     def post_test_data(self):
         return self.endpoint_client.post(self.RESOURCE_PATH, json=self.TEST_DATA)
 
-    def post_test_data_list(self):
-        return self.endpoint_client.post(self.RESOURCE_PATH, json=self.TEST_DATA_LIST)
+    def post_test_data_list(self, nested=False):
+        param_string = '%s'
+        if nested:
+            param_string = '%s?nested=true'
+        return self.endpoint_client.post(param_string % self.RESOURCE_PATH, json=self.TEST_DATA_LIST)
 
     def delete_resource_by_id(self, record_id):
         return self.endpoint_client.delete("%s?id=%s" % (self.RESOURCE_PATH, record_id))
