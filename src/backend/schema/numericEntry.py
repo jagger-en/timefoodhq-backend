@@ -9,7 +9,7 @@ class NumericEntrySchema(ma.Schema):
 
     topic = ma.Nested(TopicSchema)
 
-    context = ma.Str()
+    answer = ma.Str()
     value = ma.Float()
     date = ma.Date()
     last_updated = ma.DateTime()

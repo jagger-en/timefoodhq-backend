@@ -24,19 +24,19 @@ def add_numeric_entry_to_db(dictionary):
 
 add_topic_to_db({
     'name': 'Weight tracking',
-    'contextTitle': None,
+    'question': None,
     'supportedUnit': 'kg',
     'combinationOperation': 'avg'
 })
 add_topic_to_db({
     'name': 'Food spending',
-    'contextTitle': 'Food Name',
+    'question': 'What food was purchased?',
     'supportedUnit': 'HUF',
     'combinationOperation': 'sum'
 })
 add_topic_to_db({
     'name': 'Activity',
-    'contextTitle': 'Activity Name',
+    'question': 'What activity was done?',
     'supportedUnit': 'min',
     'combinationOperation': 'sum'
 })
@@ -53,21 +53,21 @@ activity_topic = [t for t in topics.json() if t['name'] == 'Activity'][0]
 
 add_numeric_entry_to_db({
     'topic_id': weight_topic['id'],
-    'context': None,
+    'answer': None,
     'value': 86,
     'date': createDate(year=2022, month=12, day=10)
 })
 
 add_numeric_entry_to_db({
     'topic_id': weight_topic['id'],
-    'context': None,
+    'answer': None,
     'value': 85,
     'date': createDate(year=2022, month=12, day=11)
 })
 
 add_numeric_entry_to_db({
     'topic_id': weight_topic['id'],
-    'context': None,
+    'answer': None,
     'value': 85.2,
     'date': createDate(year=2022, month=12, day=12)
 })
@@ -75,21 +75,21 @@ add_numeric_entry_to_db({
 
 add_numeric_entry_to_db({
     'topic_id': food_spending_topic['id'],
-    'context': 'Kefir',
+    'answer': 'Kefir',
     'value': 425,
     'date': createDate(year=2022, month=12, day=12)
 })
 
 add_numeric_entry_to_db({
     'topic_id': food_spending_topic['id'],
-    'context': 'Bananas 1kg',
+    'answer': 'Bananas 1kg',
     'value': 700,
     'date': createDate(year=2022, month=12, day=12)
 })
 
 add_numeric_entry_to_db({
     'topic_id': food_spending_topic['id'],
-    'context': 'Bananas 1,5kg',
+    'answer': 'Bananas 1,5kg',
     'value': 1000,
     'date': createDate(year=2022, month=12, day=14)
 })
@@ -97,28 +97,28 @@ add_numeric_entry_to_db({
 
 add_numeric_entry_to_db({
     'topic_id': activity_topic['id'],
-    'context': 'Cycling',
+    'answer': 'Cycling',
     'value': 15,
     'date': createDate(year=2022, month=12, day=11)
 })
 
 add_numeric_entry_to_db({
     'topic_id': activity_topic['id'],
-    'context': 'Running',
+    'answer': 'Running',
     'value': 20,
     'date': createDate(year=2022, month=12, day=13)
 })
 
 add_numeric_entry_to_db({
     'topic_id': activity_topic['id'],
-    'context': 'Workout',
+    'answer': 'Workout',
     'value': 90,
     'date': createDate(year=2022, month=12, day=14)
 })
 
 add_numeric_entry_to_db({
     'topic_id': activity_topic['id'],
-    'context': 'Running',
+    'answer': 'Running',
     'value': 30,
     'date': createDate(year=2022, month=12, day=14)
 })

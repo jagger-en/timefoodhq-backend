@@ -8,7 +8,7 @@ class TestEndpoints(ApiResourceTesterMixin, BaseClass):
     TOTAL_INITIALIZED = 3
     TEST_DATA = {
         'name': 'EXAMPLE NAME',
-        'contextTitle': 'EXAMPLE CONTEXT TITLE',
+        'question': 'EXAMPLE QUESTION',
         'supportedUnit': 'EXAMPLE SUPPORTED UNIT',
         'combinationOperation': 'avg',
     }
@@ -17,7 +17,7 @@ class TestEndpoints(ApiResourceTesterMixin, BaseClass):
 
     def _check(self, response):
         self.assertEqual(response['name'], 'EXAMPLE NAME')
-        self.assertEqual(response['contextTitle'], 'EXAMPLE CONTEXT TITLE')
+        self.assertEqual(response['question'], 'EXAMPLE QUESTION')
         self.assertEqual(response['supportedUnit'], 'EXAMPLE SUPPORTED UNIT')
         self.assertEqual(response['combinationOperation'], 'avg')
 

@@ -10,7 +10,7 @@ class TestEndpoints(ApiResourceTesterMixin, BaseClass):
     TOTAL_INITIALIZED = 5
     TEST_DATA = {
         'topic_id': 2,
-        'context': 'Chocolate',
+        'answer': 'Chocolate',
         'value': 400,
         'date': '2022-12-05',
     }
@@ -19,7 +19,7 @@ class TestEndpoints(ApiResourceTesterMixin, BaseClass):
 
     def _check(self, response):
         self.assertEqual(response['topic']['id'], '2')
-        self.assertEqual(response['context'], 'Chocolate')
+        self.assertEqual(response['answer'], 'Chocolate')
         self.assertEqual(response['value'], 400)
         self.assertEqual(response['date'], '2022-12-05')
 
