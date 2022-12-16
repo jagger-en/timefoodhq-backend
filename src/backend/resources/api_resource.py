@@ -1,5 +1,4 @@
 import datetime
-import json
 from flask_restful import Resource, request
 from backend.models.database import db
 from backend.utils.query import query_wrapper
@@ -29,7 +28,12 @@ class ApiResource(Resource):
         return result, 200
 
     def post(self):
-        payload = self.get_payload_as_dict()
+        request_json = request.json
+        if type(request_json) == dict:
+            return self.handle_single_entry(request_json)
+        return "Failed to parse payload", 400
+
+    def handle_single_entry(self, payload):
         payload, err = self.extract_payload(payload)
         if not err is None:
             return err, 400
@@ -70,9 +74,3 @@ class ApiResource(Resource):
     def extract_payload(self, payload):
         '''Overrideable method'''
         return payload, None
-
-    def get_payload_as_dict(self):
-        payload = request.json
-        if not isinstance(payload, dict):
-            payload = json.loads(payload)
-        return payload
