@@ -31,6 +31,8 @@ class ApiResource(Resource):
         request_json = request.json
         if type(request_json) == dict:
             return self.handle_single_entry(request_json)
+        if type(request_json) == list:
+            return self.handle_multiple_entries(request_json)
         return "Failed to parse payload", 400
 
     def handle_single_entry(self, payload):
@@ -44,6 +46,19 @@ class ApiResource(Resource):
 
         new_record_from_db = self.MODEL.query.get(new_record.id)
         return self.SCHEMA.dump(new_record_from_db), 201
+
+    def handle_multiple_entries(self, payload):
+        '''
+        NOTE: If one of the records fail to be added, we must
+              abort the session without committing partially.
+        '''
+        new_entries = []
+        for entry in payload:
+            resp, resp_code = self.handle_single_entry(entry)
+            if resp_code != 201:
+                return resp, resp_code
+            new_entries.append(resp)
+        return new_entries, 201
 
     def delete(self):
         form_data = dict(request.args)

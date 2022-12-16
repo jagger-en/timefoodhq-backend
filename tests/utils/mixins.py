@@ -55,6 +55,16 @@ class ApiResourceTesterMixin():
         self.assertEqual(response.json['id'], record_id)
         self._check(response.json)
 
+    def test_adding_multiple_records(self):
+        if self.TEST_DATA_LIST is None:
+            raise MissingAttribute('TEST_DATA_LIST')
+        if self.RESOURCE_PATH is None:
+            raise MissingAttribute('RESOURCE_PATH')
+
+        response = self.post_test_data_list()
+        self.assertEqual(response.status_code, 201)
+        self._check_multiple_records(response)
+
     ##############
     # HTTP: DELETE
     ###
@@ -94,6 +104,9 @@ class ApiResourceTesterMixin():
 
     def post_test_data(self):
         return self.endpoint_client.post(self.RESOURCE_PATH, json=self.TEST_DATA)
+
+    def post_test_data_list(self):
+        return self.endpoint_client.post(self.RESOURCE_PATH, json=self.TEST_DATA_LIST)
 
     def delete_resource_by_id(self, record_id):
         return self.endpoint_client.delete("%s?id=%s" % (self.RESOURCE_PATH, record_id))
