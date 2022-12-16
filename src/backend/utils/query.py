@@ -1,6 +1,7 @@
 from functools import wraps
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.exc import IntegrityError
+from .exceptions import FailedToHandlePostRequest
 
 
 def commit_wrapper(func):
@@ -9,9 +10,11 @@ def commit_wrapper(func):
         try:
             return func(*args, **kwargs), None
         except IntegrityError as e:
-            return None, f'IntegrityError Error: {e.orig}'
+            return None, f'IntegrityError: {e.orig}'
         except OperationalError as e:
-            return None, f'OperationalError Error: {e.orig}'
+            return None, f'OperationalError: {e.orig}'
+        except FailedToHandlePostRequest as e:
+            return None, f'FailedToHandlePostRequest: {e}'
         except Exception as e:
             return None, f'Unknown Error: {e}'
     return _commit_wrapper

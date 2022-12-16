@@ -3,6 +3,8 @@ from flask_restful import Resource, request
 from backend.models.database import db
 from backend.utils.query import query_wrapper
 from backend.utils.query import commit_wrapper
+from backend.utils.exceptions import FailedToHandlePostRequest
+import logging
 
 
 class ApiResource(Resource):
@@ -81,10 +83,22 @@ class ApiResource(Resource):
         from backend.models.database import db
 
         payload['last_updated'] = datetime.datetime.now()
-        new_record = self.MODEL(**payload)
+        new_record = self._create_new_record(payload)
+        if new_record is None:
+            logging.debug('Record not created')
+            raise FailedToHandlePostRequest('Record not created')
+
+        # NOTE: We may need a context manager here.
+        # This could cause some memory leakage.
         db.session.add(new_record)
         db.session.commit()
         return new_record
+
+    def _create_new_record(self, payload):
+        try:
+            return self.MODEL(**payload)
+        except Exception as e:
+            logging.error('Failed to create new instance: %s', e)
 
     def extract_payload(self, payload):
         '''Overrideable method'''

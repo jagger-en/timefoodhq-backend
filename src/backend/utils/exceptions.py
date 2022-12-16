@@ -1,0 +1,2 @@
+class FailedToHandlePostRequest(Exception):
+    pass

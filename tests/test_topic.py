@@ -51,7 +51,7 @@ class TestEndpoints(ApiResourceTesterMixin, BaseClass):
             self.RESOURCE_PATH, json=self.TEST_DATA)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json, 'IntegrityError Error: UNIQUE constraint failed: topic.name')
+            response.json, 'IntegrityError: UNIQUE constraint failed: topic.name')
 
 
 if __name__ == '__main__':
