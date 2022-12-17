@@ -71,7 +71,7 @@ if __name__ == '__main__':
     logging.info('Starting server...')
 
     config = {}
-    config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/database.db'
+    config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % os.getenv('DATABASE_URI', '/tmp/database.db')
 
     app_scheme = os.getenv('APP_SCHEME', 'http')
     app_host = os.getenv('APP_HOST', '127.0.0.1')
